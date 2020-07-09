@@ -1,11 +1,16 @@
 @page "/fetchdata"
-@inject HttpClient Http
+@inject IHttpClientFactory Http
+@inject Fluxor.IState<FetchingState> State
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
+<h1 style="color:red;">@State.Value.IsFetching</h1>
+<button class="btn btn-primary" @onclick="FetchAgain">Fetch Again</button>
+
+@if(forecasts == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -21,7 +26,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach(var forecast in forecasts)
             {
                 <tr>
                     <td>@forecast.Date.ToShortDateString()</td>
@@ -36,10 +41,17 @@ else
 
 @code {
     private WeatherForecast[] forecasts;
+    HttpClient _client;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        _client = Http.CreateClient("local");
+        forecasts = await _client.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+    }
+
+    async Task FetchAgain()
+    {
+        forecasts = await _client.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
     }
 
     public class WeatherForecast

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using BlazorApp1.Shared;
+using Fluxor;
 
 namespace BlazorApp1
 {
@@ -17,9 +19,19 @@ namespace BlazorApp1
 			var builder = WebAssemblyHostBuilder.CreateDefault(args);
 			builder.RootComponents.Add<App>("app");
 
-			builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<HttpProcessingDelegatingHandler>();
 
-			await builder.Build().RunAsync();
+            builder.Services
+                .AddHttpClient("local", c => c.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+                .AddHttpMessageHandler<HttpProcessingDelegatingHandler>();
+
+            builder.Services.AddFluxor(options => options
+                .ScanAssemblies(typeof(Program).Assembly)
+                .UseRouting()
+                .UseReduxDevTools()
+            );
+
+            await builder.Build().RunAsync();
 		}
 	}
 }
