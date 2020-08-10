@@ -1,5 +1,8 @@
 ﻿@page "/"
+@inject Fluxor.IDispatcher Dispatcher
 
 <h1>Hello, world!</h1>
 
-
+<button class="btn btn-primary" @onclick="@(() => Dispatcher.Dispatch(new NonAsyncAction()) )">Throw Non Async Exception</button>
+<br />
+<button class="btn btn-danger" @onclick="@(() => Dispatcher.Dispatch(new AsyncAction()) )">Async</button>

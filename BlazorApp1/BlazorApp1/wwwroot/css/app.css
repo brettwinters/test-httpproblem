@@ -1,5 +1,33 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.splash {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #232c6c; /* #6773e8;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+    .splash > p {
+        color: #fff;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+.splash-spinner, .splash-spinner:after {
+    /*    background: url(/img/three-dots-white.svg) center center no-repeat;*/
+    background: url(/img/spinner_darkblue.gif) center center no-repeat;
+    height: 30px; /* 100px;*/
+    width: 120px; /* 100px;*/
+    margin-bottom: 50px;
+    background-size: contain;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
